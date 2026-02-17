@@ -1,20 +1,28 @@
-import Text from "./Text";
-import { TextInput, Pressable, View, StyleSheet } from "react-native";
 import { useFormik } from "formik";
+import * as yup from 'yup';
+
+import Text from "./Text";
 import theme from "../theme";
+import { TextInput, Pressable, View, StyleSheet } from "react-native";
 
 const style = StyleSheet.create({
   container: {
     backgroundColor: "white",
     padding: 16,
   },
+  inputContainer: {
+    marginBottom: 16,
+  },
   input: {
     borderWidth: 1,
     borderColor: theme.colors.mainBackground,
     borderRadius: 4,
     padding: 12,
-    marginBottom: 16,
     backgroundColor: "white",
+  },
+  errorText: {
+    marginTop: 4,
+    color: theme.colors.error,
   },
   button: {
     backgroundColor: theme.colors.primary,
@@ -32,27 +40,49 @@ const initialValues = {
   password: ''
 };
 
+const validationSchema = yup.object().shape({
+  username: yup.string().required("Username is required"),
+  password: yup.string().required("Password is required"),
+})
+
 const SignInForm = ({ onSubmit }) => {
   const formik = useFormik({
     initialValues,
+    validationSchema,
     onSubmit
   });
 
   return (
     <View style={style.container}>
-      <TextInput 
-        style={style.input}
-        placeholder="Username"
-        value={formik.values.username}
-        onChangeText={formik.handleChange("username")}
-      />
-      <TextInput 
-        style={style.input}
-        placeholder="Password"
-        value={formik.values.password}
-        onChangeText={formik.handleChange("password")}
-        secureTextEntry={true}
-      />
+      <View style={style.inputContainer}>
+        <TextInput 
+          style={[
+            style.input,
+            formik.errors.username && { borderColor: theme.colors.error }
+          ]}
+          placeholder="Username"
+          value={formik.values.username}
+          onChangeText={formik.handleChange("username")}
+        />
+        {formik.touched.username && formik.errors.username && (
+          <Text style={style.errorText}>{formik.errors.username}</Text>
+        )}
+      </View>
+      <View style={style.inputContainer}>
+        <TextInput 
+          style={[
+            style.input,
+            formik.errors.password && { borderColor: theme.colors.error }
+          ]}
+          placeholder="Password"
+          value={formik.values.password}
+          onChangeText={formik.handleChange("password")}
+          secureTextEntry={true}
+        />
+        {formik.touched.password && formik.errors.password && (
+          <Text style={style.errorText}>{formik.errors.password}</Text>
+        )}
+      </View>
       <Pressable style={style.button} onPress={formik.handleSubmit}>
         <Text style={style.buttonText} fontWeight="bold" fontSize="subheading">
           Sign in
