@@ -22,6 +22,9 @@ const styles = StyleSheet.create({
   headerTextContainer: {
     gap: 4
   },
+  description: {
+    maxWidth: '90%',
+  },
   statItem: {
     alignItems: 'center',
     gap: 6,
@@ -55,7 +58,7 @@ const RepositoryHeader = ({ item }) => (
     <Image source={{ uri: item.ownerAvatarUrl }} style={styles.avatarImage} />
     <View style={styles.headerTextContainer}>
       <Text fontWeight='bold'>{item.fullName}</Text>
-      <Text>{item.description}</Text>
+      <Text style={styles.description}>{item.description}</Text>
       <Text style={styles.languageBadge}>{item.language}</Text>
     </View>
   </View>
