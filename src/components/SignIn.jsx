@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import Text from "./Text";
 import theme from "../theme";
 import { TextInput, Pressable, View, StyleSheet } from "react-native";
+import useSignIn from "../hooks/useSignIn";
 
 const style = StyleSheet.create({
   container: {
@@ -58,11 +59,12 @@ const SignInForm = ({ onSubmit }) => {
         <TextInput 
           style={[
             style.input,
-            formik.errors.username && { borderColor: theme.colors.error }
+            formik.touched.username && formik.errors.username && { borderColor: theme.colors.error }
           ]}
           placeholder="Username"
           value={formik.values.username}
           onChangeText={formik.handleChange("username")}
+          onBlur={formik.handleBlur("username")}
         />
         {formik.touched.username && formik.errors.username && (
           <Text style={style.errorText}>{formik.errors.username}</Text>
@@ -72,11 +74,12 @@ const SignInForm = ({ onSubmit }) => {
         <TextInput 
           style={[
             style.input,
-            formik.errors.password && { borderColor: theme.colors.error }
+            formik.touched.password && formik.errors.password && { borderColor: theme.colors.error }
           ]}
           placeholder="Password"
           value={formik.values.password}
           onChangeText={formik.handleChange("password")}
+          onBlur={formik.handleBlur("password")}
           secureTextEntry={true}
         />
         {formik.touched.password && formik.errors.password && (
@@ -93,8 +96,17 @@ const SignInForm = ({ onSubmit }) => {
 };
 
 const SignIn = () => {
-  const onSubmit = (values) => {
-    console.log(values);
+  const [signIn] = useSignIn();
+
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+    
+    try {
+      const authenticatePayload = await signIn({ username, password });
+      console.log(authenticatePayload);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return <SignInForm onSubmit={onSubmit} />;
