@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import Text from "./Text";
 import theme from "../theme";
 import { TextInput, Pressable, View, StyleSheet } from "react-native";
+import { useNavigate } from "react-router-native";
 import useSignIn from "../hooks/useSignIn";
 
 const style = StyleSheet.create({
@@ -97,12 +98,14 @@ const SignInForm = ({ onSubmit }) => {
 
 const SignIn = () => {
   const [signIn] = useSignIn();
+  const navigate = useNavigate();
 
   const onSubmit = async (values) => {
     const { username, password } = values;
     
     try {
       const authenticatePayload = await signIn({ username, password });
+      navigate('/', { replace: true });
       console.log(authenticatePayload);
     } catch (e) {
       console.log(e);
