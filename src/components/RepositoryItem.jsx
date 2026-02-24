@@ -81,7 +81,7 @@ const RepositoryStats = ({ item }) => (
 );
 
 const RepositoryItem = ({ item }) => (
-  <View style={styles.itemContainer}>
+  <View testID="repositoryItem" style={styles.itemContainer}>
     <RepositoryHeader item={item} />
     <RepositoryStats item={item} />
   </View>
